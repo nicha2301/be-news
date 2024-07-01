@@ -1,7 +1,6 @@
 package com.example.news.Controller;
 
 import com.example.news.Entity.ArticleRead;
-import com.example.news.Entity.Report;
 import com.example.news.Service.ArticleReadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/article-read")
@@ -30,7 +30,14 @@ public class ArticleReadController {
         return ResponseEntity.ok(articlesRead);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<ArticleRead>> findReadedArticleById(@PathVariable Long id) {
+        Optional<ArticleRead> report = articleReadService.findArticleReadById(id);
+        return ResponseEntity.ok().body(report);
+    }
+
+
+    @GetMapping("")
     public ResponseEntity<List<ArticleRead>> getAllReports() {
         List<ArticleRead> read = articleReadService.getAllAriticleRead();
         HttpHeaders headers = new HttpHeaders();

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RssServiceImpl implements RssService {
@@ -17,6 +18,29 @@ public class RssServiceImpl implements RssService {
     @Override
     public Rss save(Rss rss) {
         return rssRepository.save(rss);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        rssRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Rss> getRssById(Long id) {
+        return rssRepository.findById(id);
+    }
+
+
+    @Override
+    public Rss update(Long id, Rss updatedRss) {
+        Optional<Rss> optionalUser = rssRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            Rss rss = optionalUser.get();
+            rss.setLink(updatedRss.getLink());
+            rss.setCategory(updatedRss.getCategory());
+            return rssRepository.save(rss);
+        }
+        return null;
     }
 
     @Override

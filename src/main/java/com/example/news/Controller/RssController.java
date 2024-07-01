@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/rss")
@@ -24,7 +25,28 @@ public class RssController {
         return ResponseEntity.ok(savedRss);
     }
 
-    @GetMapping("/all")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRssById(@PathVariable Long id) {
+        rssService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Rss>> getRssFeedById(@PathVariable Long id) {
+        Optional<Rss> rssFeeds = rssService.getRssById(id);
+        return ResponseEntity.ok().body(rssFeeds);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Rss> updateRss(@PathVariable Long id, @RequestBody Rss updatedRss) {
+        Rss rss = rssService.update(id, updatedRss);
+        if (rss != null) {
+            return ResponseEntity.ok(rss);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("")
     public ResponseEntity<List<Rss>> getAllRssFeeds() {
         List<Rss> rssFeeds = rssService.getAllRssFeeds();
         HttpHeaders headers = new HttpHeaders();

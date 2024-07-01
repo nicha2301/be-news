@@ -51,8 +51,9 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+            System.out.println(user.getPass());
             user.setUsername(updatedUser.getUsername());
-            user.setPass(passwordEncoder.encode(updatedUser.getPass()));
+            user.setPass(updatedUser.getPass());
             user.setRole(updatedUser.getRole());
             return userRepository.save(user);
         }

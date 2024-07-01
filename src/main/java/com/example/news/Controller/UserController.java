@@ -1,5 +1,6 @@
 package com.example.news.Controller;
 
+import com.example.news.Entity.Rss;
 import com.example.news.Entity.User;
 import com.example.news.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.findByUsername(username);
         if (user != null) {
@@ -34,7 +35,13 @@ public class UserController {
         }
     }
 
-    @PutMapping("/update/{id}")
+    @GetMapping("/{id}")
+    public ResponseEntity<User> findUserById(@PathVariable Long id) {
+        User users = userService.findById(id);
+        return ResponseEntity.ok().body(users);
+    }
+
+    @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
         User user = userService.update(id, updatedUser);
         if (user != null) {
@@ -44,8 +51,7 @@ public class UserController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:5174")
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
         return ResponseEntity.noContent().build();
@@ -62,24 +68,13 @@ public class UserController {
     }
 
 
-    @PutMapping("/{id}/update-password")
-    public ResponseEntity<User> updateUserPassword(@PathVariable Long id, @RequestParam String newPassword) {
-        User user = userService.findById(id);
-        if (user != null) {
-            userService.updateUserPassword(user, newPassword);
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody User newUser) {
         User registeredUser = userService.registerUser(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
 
-    @GetMapping("/all")
+    @GetMapping("")
     public ResponseEntity<List<User>> findAllUsers() {
         List<User> users = userService.findAll();
         HttpHeaders headers = new HttpHeaders();
