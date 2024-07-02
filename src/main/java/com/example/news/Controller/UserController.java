@@ -1,5 +1,6 @@
 package com.example.news.Controller;
 
+import com.example.news.DTO.LoginRequest;
 import com.example.news.Entity.Rss;
 import com.example.news.Entity.User;
 import com.example.news.Service.UserService;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -57,9 +58,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{username}/login")
-    public ResponseEntity<User> loginUser(@PathVariable String username, @RequestParam String password) {
-        User user = userService.loginUser(username, password);
+    @PostMapping("/login")
+    public ResponseEntity<User> loginUser(@RequestBody LoginRequest loginRequest) {
+        User user = userService.loginUser(loginRequest.getUsername(), loginRequest.getPassword());
         if (user != null) {
             return ResponseEntity.ok(user);
         } else {

@@ -13,23 +13,31 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/rss")
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = "http://localhost:3000")
 public class RssController {
 
     @Autowired
     private RssService rssService;
+
+    @GetMapping("")
+    public ResponseEntity<List<Rss>> getAllRssFeeds() {
+        List<Rss> rssFeeds = rssService.getAllRssFeeds();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Range", "users 0-9/" + rssFeeds.size());
+        return ResponseEntity.ok().headers(headers).body(rssFeeds);
+    }
 
     @PostMapping("/save")
     public ResponseEntity<Rss> saveRssFeed(@RequestBody Rss rss) {
         Rss savedRss = rssService.save(rss);
         return ResponseEntity.ok(savedRss);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRssById(@PathVariable Long id) {
         rssService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Rss>> getRssFeedById(@PathVariable Long id) {
         Optional<Rss> rssFeeds = rssService.getRssById(id);
@@ -44,14 +52,6 @@ public class RssController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @GetMapping("")
-    public ResponseEntity<List<Rss>> getAllRssFeeds() {
-        List<Rss> rssFeeds = rssService.getAllRssFeeds();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Range", "users 0-9/" + rssFeeds.size());
-        return ResponseEntity.ok().headers(headers).body(rssFeeds);
     }
 
 }
