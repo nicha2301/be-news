@@ -37,7 +37,7 @@ public class RssServiceImpl implements RssService {
         if (optionalUser.isPresent()) {
             Rss rss = optionalUser.get();
             rss.setLink(updatedRss.getLink());
-            rss.setCategory(updatedRss.getCategory());
+            rss.setName(updatedRss.getName());
             return rssRepository.save(rss);
         }
         return null;
